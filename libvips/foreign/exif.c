@@ -1205,8 +1205,20 @@ vips_exif_image_field( VipsImage *image,
 	}
 
 	if( !(tag = exif_tag_from_name( p + 1 )) ) {
-		g_warning( _( "bad exif meta \"%s\"" ), field );
-		return( NULL ); 
+		/*
+		 * This is a workaround.
+		 *
+		 * exif-ifd3-GPSVersionID has tag ID 0, which is the same as the function error return value
+		 * see https://sourceforge.net/p/libexif/bugs/100/
+		 *
+		 * Updating the parent EXIF library to return another value would result in a breaking change
+		 */
+		if( tag == "exif-ifd3-GPSVersionID") {
+			return 0
+		} else {
+			g_warning( _( "bad exif meta \"%s\"" ), field );
+			return( NULL ); 
+		}
 	}
 
 	vips_exif_set_tag( ed, ifd, tag, vips_exif_set_entry, (void *) string );
