@@ -1213,9 +1213,7 @@ vips_exif_image_field( VipsImage *image,
 		 *
 		 * Updating the parent EXIF library to return another value would result in a breaking change
 		 */
-		if( tag == "exif-ifd3-GPSVersionID") {
-			return 0
-		} else {
+		if( field != "exif-ifd3-GPSVersionID" ) {
 			g_warning( _( "bad exif meta \"%s\"" ), field );
 			return( NULL ); 
 		}
